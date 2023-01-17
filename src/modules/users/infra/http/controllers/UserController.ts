@@ -1,14 +1,22 @@
 import { Request, Response } from "express";
-// import { container } from "tsyringe";
+import { container } from "tsyringe";
+import CreateUserService from "../../../services/CreateUserService";
 
 export default class UserController {
   public async store(request: Request, response: Response): Promise<Response> {
-    const { nome, cpf, rg, photo, email, phone } = request.body;
+    const { name, cpf, rg, foto, email, cell } = request.body;
 
-    // criar serviço
+    const userToCreate = container.resolve(CreateUserService);
 
-    console.log("🟡Passou no controller");
-    const user = { Usuario: "Users" };
-    return response.status(200).json(user);
+    const userCreated = await userToCreate.execute({
+      name,
+      cpf,
+      rg,
+      foto,
+      email,
+      cell,
+    });
+
+    return response.status(200).json(userCreated);
   }
 }
